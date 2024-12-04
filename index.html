@@ -43,11 +43,22 @@
                 `${hours}:${minutes}:${seconds} ${ampm}`;
         }
 
-        // Update clock immediately
-        updateClock();
+        function synchronizeClock() {
+            updateClock();
 
-        // Update clock every second
-        setInterval(updateClock, 1000);
+            // Calculate the time remaining until the next full second
+            const now = new Date();
+            const millisecondsUntilNextSecond = 1000 - now.getMilliseconds();
+
+            // Set a timeout to update the clock exactly at the start of the next second
+            setTimeout(() => {
+                updateClock();
+                setInterval(updateClock, 1000); // Start updating every second
+            }, millisecondsUntilNextSecond);
+        }
+
+        // Start the clock synchronization
+        synchronizeClock();
     </script>
 </body>
 </html>
