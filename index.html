@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>12-Hour Digital Clock</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
             display: flex;
@@ -13,14 +14,14 @@
         }
 
         #clock {
-            font-family: Arial, sans-serif;
-            font-size: 100px; /* Increased font size */
+            font-family: 'Comic Neue', sans-serif; /* Comic Neue font from Google Fonts */
+            font-size: 150px; /* Large font size */
             text-align: center;
             color: #333;
             background-color: #ffffff; /* White background for the clock */
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for better aesthetics */
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Subtle shadow */
         }
     </style>
 </head>
@@ -44,7 +45,7 @@
 
         // Update clock immediately
         updateClock();
-        
+
         // Update clock every second
         setInterval(updateClock, 1000);
     </script>
