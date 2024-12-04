@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>12-Hour Digital Clock with Stable Milliseconds</title>
+    <title>12-Hour Digital Clock with Shifted Milliseconds</title>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -19,28 +19,30 @@
             font-family: 'Comic Neue', sans-serif;
             color: #333;
             background-color: #ffffff;
-            padding: 50px; /* Slightly more padding for spacing */
-            border-radius: 35px; /* Balanced rounded corners */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+            padding: 40px;
+            border-radius: 30px; /* Rounded corners */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25); /* Subtle shadow */
         }
 
         #time {
-            font-size: 145px; /* Balanced font size */
+            font-size: 140px; /* Main time font size */
             line-height: 1;
         }
 
         #milliseconds {
-            font-size: 145px; /* Same size as the main time */
+            font-size: 84px; /* 3/5 of the main time size */
             line-height: 1;
-            margin-left: 18px; /* Slightly more spacing between seconds and milliseconds */
-            width: 220px; /* Fixed width to prevent movement */
+            margin-left: 12px; /* Spacing between seconds and milliseconds */
+            width: 120px; /* Fixed width to prevent movement */
             text-align: left; /* Align text to the left within the fixed width */
+            position: relative;
+            top: -10px; /* Shift milliseconds up by 5 pixels */
         }
 
         #ampm {
-            font-size: 145px; /* Same size as the main time */
+            font-size: 140px; /* Same size as the main time */
             line-height: 1;
-            margin-left: 18px; /* Slightly more spacing between milliseconds and AM/PM */
+            margin-left: 35px; /* Spacing between milliseconds and AM/PM */
         }
 
         /* Use monospace for numbers to ensure consistent width */
