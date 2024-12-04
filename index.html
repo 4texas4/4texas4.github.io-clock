@@ -30,8 +30,13 @@
         }
 
         #milliseconds {
-            font-size: 50%; /* Half the size of the main clock */
-            margin-left: 10px; /* Add spacing between seconds and milliseconds */
+            font-size: 75%; /* Slightly smaller than the main time */
+            margin: 0 10px; /* Add spacing between seconds and AM/PM */
+            line-height: 1; /* Prevent extra spacing */
+        }
+
+        #ampm {
+            font-size: 150px; /* Same size as the main time */
             line-height: 1; /* Prevent extra spacing */
         }
     </style>
@@ -40,6 +45,7 @@
     <div id="clock-container">
         <div id="time"></div>
         <div id="milliseconds"></div>
+        <div id="ampm"></div>
     </div>
 
     <script>
@@ -55,8 +61,9 @@
             hours = hours % 12 || 12;
 
             // Update the clock
-            document.getElementById('time').innerHTML = `${hours}:${minutes}:${seconds} ${ampm}`;
+            document.getElementById('time').innerHTML = `${hours}:${minutes}:${seconds}`;
             document.getElementById('milliseconds').innerHTML = `.${milliseconds}`;
+            document.getElementById('ampm').innerHTML = ` ${ampm}`;
         }
 
         function synchronizeClock() {
