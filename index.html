@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>12-Hour Digital Clock</title>
+    <style>
+        #clock {
+            font-family: Arial, sans-serif;
+            font-size: 50px;
+            text-align: center;
+            margin: 100px auto;
+            color: #333;
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            width: fit-content;
+        }
+    </style>
+</head>
+<body>
+    <div id="clock"></div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+
+            // Convert to 12-hour format
+            hours = hours % 12 || 12;
+
+            document.getElementById('clock').innerHTML = 
+                `${hours}:${minutes}:${seconds} ${ampm}`;
+        }
+
+        // Update clock immediately
+        updateClock();
+        
+        // Update clock every second
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
