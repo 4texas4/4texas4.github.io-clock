@@ -1,65 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Live Clock</title>
+    <title>Live Clock & Countdown Timer</title>
     <link rel="icon" href="clock.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             background-color: #f8f9fa;
+            font-family: 'Comic Neue', sans-serif;
         }
-
-        #clock-container {
+        #clock-container, #timer-container {
             display: flex;
             align-items: flex-end;
-            font-family: 'Comic Neue', sans-serif;
-            color: #333;
+            justify-content: center;
             background-color: #ffffff;
-            padding: 40px; /* Balanced padding */
-            border-radius: 30px; /* Rounded corners */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25); /* Subtle shadow */
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+            font-size: 140px;
+            color: #333;
         }
-
-        #time {
-            font-size: 140px; /* Main time font size (hours and minutes) */
-            line-height: 1;
-        }
-
         #seconds-container {
-            font-size: 84px; /* Smaller font size for seconds and milliseconds */
-            line-height: 1;
-            margin-left: 12px; /* Spacing between minutes and seconds */
+            font-size: 84px;
+            margin-left: 12px;
             display: flex;
-            align-items: flex-end; /* Align seconds and milliseconds together */
+            align-items: flex-end;
             position: relative;
-            top: -10px; /* Shift seconds and milliseconds up */
+            top: -10px;
         }
-
-        #seconds {
-            margin-right: 5px; /* Spacing between seconds and milliseconds */
-        }
-
-        #milliseconds {
-            width: 120px; /* Fixed width to prevent movement */
-            text-align: left; /* Align text to the left within the fixed width */
-        }
-
         #ampm {
-            font-size: 140px; /* Same size as the main time */
-            line-height: 1;
-            margin-left: 35px; /* Spacing between seconds-container and AM/PM */
+            font-size: 140px;
+            margin-left: 35px;
         }
-
-        /* Use monospace for numbers to ensure consistent width */
-        #time, #seconds-container, #seconds, #milliseconds, #ampm {
-            font-variant-numeric: tabular-nums;
-            -webkit-font-variant-numeric: tabular-nums;
-            font-feature-settings: "tnum";
+        #inputContainer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px 20px;
+            font-size: 24px;
+            border: none;
+            border-radius: 15px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #e0e0e0;
+        }
+        #clearButton {
+            display: none;
         }
     </style>
 </head>
@@ -68,46 +65,82 @@
         <div id="time"></div>
         <div id="seconds-container">
             <div id="seconds"></div>
-            <div id="milliseconds"></div>
         </div>
         <div id="ampm"></div>
     </div>
 
+    <div id="inputContainer">
+        <input type="time" id="timeInput">
+        <button onclick="startCountdown()">Start Countdown</button>
+    </div>
+
+    <div id="timer-container" style="display:none;">
+        <div id="countdown-time"></div>
+    </div>
+    
+    <button id="clearButton" onclick="resetCountdown()">Clear</button>
+
     <script>
+        let countdownInterval;
+
         function updateClock() {
             const now = new Date();
             let hours = now.getHours();
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
-            const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
             const ampm = hours >= 12 ? 'PM' : 'AM';
-
-            // Convert to 12-hour format
             hours = hours % 12 || 12;
-
-            // Update the clock
             document.getElementById('time').innerHTML = `${hours}:${minutes}`;
             document.getElementById('seconds').innerHTML = `:${seconds}`;
-            document.getElementById('milliseconds').innerHTML = `.${milliseconds}`;
             document.getElementById('ampm').innerHTML = ` ${ampm}`;
         }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-        function synchronizeClock() {
-            updateClock();
+        function startCountdown() {
+            const timeInput = document.getElementById('timeInput').value;
+            if (!timeInput) {
+                alert("Please enter a time.");
+                return;
+            }
+            document.getElementById('clock-container').style.display = 'none';
+            document.getElementById('inputContainer').style.display = 'none';
+            document.getElementById('timer-container').style.display = 'flex';
+            document.getElementById('clearButton').style.display = 'block';
 
-            // Calculate the time remaining until the next 10ms frame
             const now = new Date();
-            const millisecondsUntilNextFrame = 10 - (now.getMilliseconds() % 10);
+            const targetTime = new Date(now);
+            const [hours, minutes] = timeInput.split(':');
+            targetTime.setHours(hours);
+            targetTime.setMinutes(minutes);
+            targetTime.setSeconds(0);
+            targetTime.setMilliseconds(0);
+            if (targetTime < now) {
+                targetTime.setDate(targetTime.getDate() + 1);
+            }
 
-            // Set a timeout to update the clock at the next 10ms frame
-            setTimeout(() => {
-                updateClock();
-                setInterval(updateClock, 10); // Update every 10ms for smooth milliseconds
-            }, millisecondsUntilNextFrame);
+            countdownInterval = setInterval(function () {
+                const remainingTime = targetTime - new Date();
+                if (remainingTime <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('countdown-time').innerText = "00:00:00";
+                } else {
+                    const hoursLeft = String(Math.floor(remainingTime / (1000 * 60 * 60))).padStart(2, '0');
+                    const minutesLeft = String(Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                    const secondsLeft = String(Math.floor((remainingTime % (1000 * 60)) / 1000)).padStart(2, '0');
+                    document.getElementById('countdown-time').innerText = `${hoursLeft}:${minutesLeft}:${secondsLeft}`;
+                }
+            }, 1000);
         }
 
-        // Start the clock synchronization
-        synchronizeClock();
+        function resetCountdown() {
+            clearInterval(countdownInterval);
+            document.getElementById('timer-container').style.display = 'none';
+            document.getElementById('inputContainer').style.display = 'block';
+            document.getElementById('clock-container').style.display = 'flex';
+            document.getElementById('clearButton').style.display = 'none';
+        }
     </script>
 </body>
 </html>
+
